@@ -4,13 +4,15 @@ error_reporting(0);
 error_reporting(E_ALL ^ E_NOTICE);
 error_reporting(E_ALL ^ E_WARNING); 
 header("Content-type: text/html; charset=utf-8");
-$parameters = explode("&", $_SERVER['QUERY_STRING']);
-$requests = array();
-
-//parameters to array
-foreach ($parameters as $v) {
-    $requests = array_merge($requests, array(explode("=", $v)[0] => explode("=", $v)[1]));
+if (is_null($_SERVER['QUERY_STRING'])==false){
+    $parameters = explode("&", $_SERVER['QUERY_STRING']);
+    $requests = array();
+    //parameters to array
+    foreach ($parameters as $v) {
+        $requests = array_merge($requests, array(explode("=", $v)[0] => explode("=", $v)[1]));
+    };
 };
+
 echo "<!DOCTYPE html>";
 echo "<html>";
 echo "<head>";
@@ -20,6 +22,8 @@ echo "<body>";
 echo "<p>学霸题，烙log</p>";
 echo '<p>log<input type="text" name="dishu" id="dishu"><input type="text" name="zhenshu" id="zhenshu"></p>';
 echo '<p><input type="submit" value="计算" onclick="sub();"></p>';
+
+if (is_null($_SERVER['QUERY_STRING'])==false){
 if (is_null($requests['log']) == false) {
     //算log
     $result=log(floatval($requests['log2']),floatval($requests['log']));
@@ -34,6 +38,7 @@ if (is_null($requests['log']) == false) {
 } elseif (is_null($requests['ln']) == false) {
     //算ln
     echo '<p>结果算出来：ln '.$requests['ln'].' = '.log($requests['ln']).'</p>';
+};
 };
 echo "<p>乐迪出品，必属精品</p>";
 echo <<<CODE
@@ -57,4 +62,3 @@ function sub()
 CODE;
 echo "</body>";
 echo "</html>";
-?> 
