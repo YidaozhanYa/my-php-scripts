@@ -1,4 +1,8 @@
 <?php
+ini_set("display_errors", 0);
+error_reporting(0);
+error_reporting(E_ALL ^ E_NOTICE);
+error_reporting(E_ALL ^ E_WARNING); 
 header("Content-type: text/html; charset=utf-8");
 $parameters = explode("&", $_SERVER['QUERY_STRING']);
 $requests = array();
