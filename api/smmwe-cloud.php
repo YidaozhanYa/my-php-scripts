@@ -16,9 +16,8 @@ function gen_metadata_by_name($level_name_args)
 	Client::initialize('p3DseF72y38R0vYItqEBBdJc-MdYXbMMI', 'CUwwobi3vLqfrTmlRWmtfuIj', '4W9Y1SUxPOkJl861XVjItAjd');
 	$query = new Query("Metadata");
 	$query->equalTo("level_name", $level_name_args);
-	$query->select("-level_name","-objectId","-createdAt","-updatedAt");
+	$query->select("-objectId","-createdAt","-updatedAt");
 	$metadatas_query = $query->first();
-	//$return_data = $query->find();
 	$return_data['level_name']=$level_name_args;
 	$return_data['level_id']=$metadatas_query->get("level_id");
 	$return_data['level_author']=$metadatas_query->get("level_author");
@@ -102,7 +101,11 @@ if (preg_match("/zh/i", $lang)) {
 		} elseif ($metadatas['level_apariencia'] == '1') {
 			echo '<p>' . "游戏风格：" . "New 超级马力欧兄弟 U" . '</p>';
 		};
-		echo '<p>' . "关卡标签：" . etiquetas_zh[$metadatas['level_label1']] . "，" . etiquetas_zh[$metadatas['level_label2']] . '</p>';
+		if ($metadatas['level_label2']=="---") {
+			echo '<p>' . "关卡标签：" . etiquetas_zh[$metadatas['level_label1']] . '</p>';
+		} else {
+			echo '<p>' . "关卡标签：" . etiquetas_zh[$metadatas['level_label1']] . ", " . etiquetas_zh[$metadatas['level_label2']] . '</p>';
+		};
 	};
 } elseif (preg_match("/en/i", $lang)) {
 	if (is_null($metadatas)) {
@@ -124,7 +127,11 @@ if (preg_match("/zh/i", $lang)) {
 		} elseif ($metadatas['level_apariencia'] == '1') {
 			echo '<p>' . "Game Style: " . "New Super Mario Bros. U" . '</p>';
 		};
-		echo '<p>' . "Level Tags: " . etiquetas_en[$metadatas['level_label1']] . ", " . etiquetas_en[$metadatas['level_label2']] . '</p>';
+		if ($metadatas['level_label2']=="---") {
+			echo '<p>' . "Level Tags: " . etiquetas_en[$metadatas['level_label1']] . '</p>';
+		} else {
+			echo '<p>' . "Level Tags: " . etiquetas_en[$metadatas['level_label1']] . ", " . etiquetas_en[$metadatas['level_label2']] . '</p>';
+		};
 	};
 } elseif (preg_match("/es/i", $lang)) {
 	if (is_null($metadatas)) {
@@ -146,7 +153,11 @@ if (preg_match("/zh/i", $lang)) {
 		} elseif ($metadatas['level_apariencia'] == '1') {
 			echo '<p>' . "Estilo de Juego: " . "New Super Mario Bros. U" . '</p>';
 		};
-		echo '<p>' . "Etiquetas de Nivel: " . $metadatas['level_label1'] . ", " . $metadatas['level_label2'] . '</p>';
+		if ($metadatas['level_label2']=="---") {
+			echo '<p>' . "Etiquetas de Nivel: " . $metadatas['level_label1'] . '</p>';
+		} else {
+			echo '<p>' . "Etiquetas de Nivel: " . $metadatas['level_label1'] . ", " . $metadatas['level_label2'] . '</p>';
+		};
 	};
 };
 
@@ -155,7 +166,6 @@ echo <<<STR
 	<div id="vcomments"></div>
 	<script>
 		document.getElementById("url").setAttribute("style", "display:none");
-
 		function GetQueryString(name) {
 			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
 			var r = window.location.search.substr(1).match(reg);
@@ -166,8 +176,8 @@ echo <<<STR
 			el: '#vcomments',
 			appId: 'zoX8kazyGBliRB8slCeYbOMI-MdYXbMMI',
 			appKey: 'ayoqJFfEYQj3teSHqfK03JJo',
-			placeholder: '来给 ' + GetQueryString("levelName=\"").replace(".swe\"", "")+ ' 发条评论吧~',
-			path: 'smmweCloud/LevelComment/' + GetQueryString("levelName").replace("\"", "").replace("\"", ""),
+			placeholder: '来给 ' + GetQueryString("levelName").replace(".swe\"", "").substr(1) + ' 发条评论吧~',
+			path: 'smmweCloud/LevelComment/' + GetQueryString("levelName").replace(".swe\"", "").substr(1),
 			meta: ['nick', 'mail'],
 			pageSize: 5,
 			enableQQ: true,
