@@ -1,4 +1,37 @@
 <?php
+ini_set("display_errors", 0);
+error_reporting(0);
+error_reporting(E_ALL ^ E_NOTICE);
+error_reporting(E_ALL ^ E_WARNING); 
+
+function get_max_files()
+{
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, "https://smmwe-cloud.vercel.app/main/?apiv3-maxfiles");
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 10);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($curl, CURLOPT_HEADER, false);
+    $return_data = curl_exec($curl);
+    curl_close($curl);
+    return intval($return_data);
+};
+
+function get_storage()
+{
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, "https://smmwe-cloud.vercel.app/main/?apiv3-diskspace");
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 10);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($curl, CURLOPT_HEADER, false);
+    $return_data = curl_exec($curl);
+    curl_close($curl);
+    return $return_data;
+};
+
 header('Content-Type: text/html; charset=utf-8');
 set_time_limit(0);
 require_once("autoload-linux.php");
@@ -8,6 +41,7 @@ use \LeanCloud\LeanObject;
 use \LeanCloud\Query;
 
 header("Content-Type: text/html; charset=utf-8");
+$lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 4);
 $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 4);
 Client::initialize('p3DseF72y38R0vYItqEBBdJc-MdYXbMMI', 'CUwwobi3vLqfrTmlRWmtfuIj', '4W9Y1SUxPOkJl861XVjItAjd');
 $query = new Query("Metadata");
@@ -36,19 +70,12 @@ if (preg_match("/zh/i", $lang)) {
     echo "<td>" . strval($query->count()) . "</td>";
     echo "</tr>";
 
-    echo "<tr>";
-    echo "<td>缓存元数据数量</td>";
-    echo "<td>" . strval(get_file_counts($_SERVER['DOCUMENT_ROOT'] . "/cache")) . "</td>";
-    echo "</tr>";
-
-    echo "<tr>";
-    echo "<td>缓存关卡数量</td>";
-    echo "<td>" . strval(get_file_counts($_SERVER['DOCUMENT_ROOT'] . "/level_cache")) . "</td>";
-    echo "</tr>";
-
     echo "</table>";
 
-    echo "<p>运行于 " . php_uname() . ", PHP版本 " . PHP_VERSION . "</p>";
+    echo "<p>运行于 " . php_uname() . php_sapi_name() . ", PHP版本 " . PHP_VERSION . "</p>";
+
+    echo "<p>" . $_SERVER['SERVER_SOFTWARE'] . $_SERVER['PROCESSOR_IDENTIFIER'] .  $_SERVER['REMOTE_ADDR'] . "</p>";
+
 } elseif (preg_match("/en/i", $lang)) {
     echo "<p>SMMWE Cloud statistics</p>";
 
@@ -74,19 +101,11 @@ if (preg_match("/zh/i", $lang)) {
     echo "<td>" . strval($query->count()) . "</td>";
     echo "</tr>";
 
-    echo "<tr>";
-    echo "<td>Cached metadata count</td>";
-    echo "<td>" . strval(get_file_counts($_SERVER['DOCUMENT_ROOT'] . "/cache")) . "</td>";
-    echo "</tr>";
-
-    echo "<tr>";
-    echo "<td>Cached level count</td>";
-    echo "<td>" . strval(get_file_counts($_SERVER['DOCUMENT_ROOT'] . "/level_cache")) . "</td>";
-    echo "</tr>";
-
     echo "</table>";
 
-    echo "<p>Running on " . php_uname() . ", PHP Version " . PHP_VERSION . "</p>";
+    echo "<p>Running on " . php_uname() . php_sapi_name() . ", PHP Version " . PHP_VERSION . "</p>";
+
+    echo "<p>" . $_SERVER['SERVER_SOFTWARE'] . $_SERVER['PROCESSOR_IDENTIFIER'] .  $_SERVER['REMOTE_ADDR'] . "</p>";
 } elseif (preg_match("/es/i", $lang)) {
     echo "<p>SMMWE Cloud estadisticas</p>";
 
@@ -111,19 +130,11 @@ if (preg_match("/zh/i", $lang)) {
     echo "<td>Conteo de metadatos</td>";
     echo "<td>" . strval($query->count()) . "</td>";
     echo "</tr>";
-
-    echo "<tr>";
-    echo "<td>Conteo de metadatos en cache</td>";
-    echo "<td>" . strval(get_file_counts($_SERVER['DOCUMENT_ROOT'] . "/cache")) . "</td>";
-    echo "</tr>";
-
-    echo "<tr>";
-    echo "<td>Conteo de niveles en cache</td>";
-    echo "<td>" . strval(get_file_counts($_SERVER['DOCUMENT_ROOT'] . "/level_cache")) . "</td>";
-    echo "</tr>";
-
+    
     echo "</table>";
 
-    echo "<p>El servidor se esta ejecutando en " . php_uname() . ", PHP Version " . PHP_VERSION . "</p>";
+    echo "<p>El servidor se esta ejecutando en " . php_uname() . php_sapi_name() . ", PHP Version " . PHP_VERSION . "</p>";
+
+    echo "<p>" . $_SERVER['SERVER_SOFTWARE'] . $_SERVER['PROCESSOR_IDENTIFIER'] .  $_SERVER['REMOTE_ADDR'] . "</p>";
 };
 ?> 

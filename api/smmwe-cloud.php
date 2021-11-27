@@ -1,5 +1,10 @@
 <?php
 
+ini_set("display_errors", 0);
+error_reporting(0);
+error_reporting(E_ALL ^ E_NOTICE);
+error_reporting(E_ALL ^ E_WARNING); 
+
 require_once("autoload-linux.php");
 
 use \LeanCloud\Client;
@@ -90,6 +95,7 @@ $level_name = str_replace('levelName=%22','',str_replace('.swe%22', '', $_SERVER
 $metadatas = gen_metadata_by_name($level_name);
 
 
+$lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 4);
 if (preg_match("/zh/i", $lang)) {
 	if (is_null($metadatas)) {
 		echo '<font size="5">' . $level_name . '</font>';
