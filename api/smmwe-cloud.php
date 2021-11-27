@@ -1,5 +1,11 @@
 <?php
 
+require_once("autoload-linux.php");
+
+use \LeanCloud\Client;
+use \LeanCloud\LeanObject;
+use \LeanCloud\Query;
+
 function gen_metadata_by_name($level_name)
 {
 	Client::initialize('p3DseF72y38R0vYItqEBBdJc-MdYXbMMI', 'CUwwobi3vLqfrTmlRWmtfuIj', '4W9Y1SUxPOkJl861XVjItAjd');
@@ -66,22 +72,9 @@ define('etiquetas_zh', [
 ]);
 
 header('Content-Type: text/html; charset=utf-8');
-require_once("autoload-linux.php");
-
-use \LeanCloud\Client;
-use \LeanCloud\LeanObject;
-use \LeanCloud\Query;
-
 set_time_limit(0);
-$parameters = explode("&", $_SERVER['QUERY_STRING']);
-$requests = array();
 
-//parameters to array
-foreach ($parameters as $v) {
-	$requests = array_merge($requests, array(explode("=", $v)[0] => explode("=", $v)[1]));
-};
-
-$level_name = str_replace('.swe', '', $requests['levelName']);
+$level_name = str_replace('levelName="','',str_replace('".swe', '', $_SERVER['QUERY_STRING']));
 $metadatas = gen_metadata_by_name($level_name);
 
 
