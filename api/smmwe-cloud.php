@@ -16,6 +16,18 @@ function gen_metadata_by_name($level_name)
 	return json_decode(str_replace("\u0000", "", json_encode(object_array($return_data[0]))), true)["LeanCloud\LeanObject_data"];
 };
 
+function object_array($array)
+{
+    if (is_object($array)) {
+        $array = (array)$array;
+    }
+    if (is_array($array)) {
+        foreach ($array as $key => $value) {
+            $array[$key] = object_array($value);
+        }
+    }
+    return $array;
+};
 
 define('etiquetas_es', [
 	'Tradicional',
@@ -74,7 +86,7 @@ define('etiquetas_zh', [
 header('Content-Type: text/html; charset=utf-8');
 set_time_limit(0);
 
-$level_name = str_replace('levelName="','',str_replace('".swe', '', $_SERVER['QUERY_STRING']));
+$level_name = str_replace('levelName=%22','',str_replace('.swe%22', '', $_SERVER['QUERY_STRING']));
 $metadatas = gen_metadata_by_name($level_name);
 
 
@@ -169,7 +181,7 @@ if (preg_match("/zh/i", $lang)) {
 			el: '#vcomments',
 			appId: 'zoX8kazyGBliRB8slCeYbOMI-MdYXbMMI',
 			appKey: 'ayoqJFfEYQj3teSHqfK03JJo',
-			placeholder: '来给 ' + GetQueryString("levelName").replace(".swe", "").replace("\"", "").replace("\"", "") + ' 发条评论吧~',
+			placeholder: '来给 ' + GetQueryString("levelName=\"").replace(".swe\"", "")+ ' 发条评论吧~',
 			path: 'smmweCloud/LevelComment/' + GetQueryString("levelName").replace("\"", "").replace("\"", ""),
 			meta: ['nick', 'mail'],
 			pageSize: 5,
