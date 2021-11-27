@@ -30,19 +30,6 @@ function gen_metadata_by_name($level_name_args)
 	return $return_data;
 };
 
-function object_array($array)
-{
-    if (is_object($array)) {
-        $array = (array)$array;
-    }
-    if (is_array($array)) {
-        foreach ($array as $key => $value) {
-            $array[$key] = object_array($value);
-        }
-    }
-    return $array;
-};
-
 define('etiquetas_en', [
 	'Tradicional'=>'Standard',
 	'Puzles'=>'Puzzle-solving',
@@ -86,6 +73,13 @@ $level_name = rawurldecode(str_replace('levelName=%22','',str_replace('.swe%22',
 
 $metadatas = gen_metadata_by_name($level_name);
 
+
+echo <<<STR
+<head>
+	<script src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
+</head>
+STR;
+echo "<body>";
 
 $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 4);
 if (preg_match("/zh/i", $lang)) {
@@ -155,22 +149,9 @@ if (preg_match("/zh/i", $lang)) {
 		echo '<p>' . "Etiquetas de Nivel: " . $metadatas['level_label1'] . ", " . $metadatas['level_label2'] . '</p>';
 	};
 };
-?>
 
+echo <<<STR
 
-
-<html>
-
-<head>
-	<?php //<style type="text/css">
-		//body {
-		//	font-size: 16px;
-		//}
-	//</style> ?>
-	<script src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
-</head>
-
-<body>
 	<div id="vcomments"></div>
 	<script>
 		document.getElementById("url").setAttribute("style", "display:none");
@@ -469,5 +450,5 @@ if (preg_match("/zh/i", $lang)) {
 		})
 	</script>
 </body>
-
-</html>
+STR;
+?>
