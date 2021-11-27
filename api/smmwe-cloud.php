@@ -43,58 +43,40 @@ function object_array($array)
     return $array;
 };
 
-define('etiquetas_es', [
-	'Tradicional',
-	'Puzles',
-	'Contrarreloj',
-	'Autoavance',
-	'Automatismos',
-	'Corto pero intenso',
-	'Competitivo',
-	'Tematico',
-	'Música',
-	'Artístico',
-	'Habilidad',
-	'Disparos',
-	'Contra jefes',
-	'En solitario',
-	'Link'
-]);
-
 define('etiquetas_en', [
-	'Standard',
-	'Puzzle-solving',
-	'Speedrun',
-	'Autoscroll',
-	'Auto-mario',
-	'Short and Sweet',
-	'Multiplayer Versus',
-	'Themed',
-	'Music',
-	'Art',
-	'Technical',
-	'Shooter',
-	'Boss battle',
-	'Single player',
-	'Link'
+	'Tradicional'=>'Standard',
+	'Puzles'=>'Puzzle-solving',
+	'Contrarreloj'=>'Speedrun',
+	'Autoavance'=>'Autoscroll',
+	'Automatismos'=>'Auto-mario',
+	'Corto pero intenso'=>'Short and Sweet',
+	'Competitivo'=>'Multiplayer Versus',
+	'Tematico'=>'Themed',
+	'Música'=>'Music',
+	'Artístico'=>'Art',
+	'Habilidad'=>'Technical',
+	'Disparos'=>'Shooter',
+	'Contra jefes'=>'Boss battle',
+	'En solitario'=>'Single player',
+	'Link'=>'Link'
 ]);
 
 define('etiquetas_zh', [
-	'标准',
-	'解谜',
-	'计时挑战',
-	'自动卷轴',
-	'自动马力欧',
-	'一次通过',
-	'多人对战',
-	'机关设计',
-	'音乐',
-	'美术',
-	'技巧',
-	'射击',
-	'BOSS战',
-	'单打',
-	'林克'
+	'Tradicional'=>'标准',
+	'Puzles'=>'解谜',
+	'Contrarreloj'=>'计时挑战',
+	'Autoavance'=>'自动卷轴',
+	'Automatismos'=>'自动马力欧',
+	'Corto pero intenso'=>'一次通过',
+	'Competitivo'=>'多人对战',
+	'Tematico'=>'机关设计',
+	'Música'=>'音乐',
+	'Artístico'=>'美术',
+	'Habilidad'=>'技巧',
+	'Disparos'=>'射击',
+	'Contra jefes'=>'BOSS战',
+	'En solitario'=>'单打',
+	'Link'=>'林克'
 ]);
 
 header('Content-Type: text/html; charset=utf-8');
@@ -170,7 +152,7 @@ if (preg_match("/zh/i", $lang)) {
 		} elseif ($metadatas['level_apariencia'] == '1') {
 			echo '<p>' . "Estilo de Juego: " . "New Super Mario Bros. U" . '</p>';
 		};
-		echo '<p>' . "Etiquetas de Nivel: " . etiquetas_es[$metadatas['level_label1']] . ", " . etiquetas_es[$metadatas['level_label2']] . '</p>';
+		echo '<p>' . "Etiquetas de Nivel: " . $metadatas['level_label1'] . ", " . $metadatas['level_label2'] . '</p>';
 	};
 };
 ?>
