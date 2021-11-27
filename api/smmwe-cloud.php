@@ -11,14 +11,23 @@ use \LeanCloud\Client;
 use \LeanCloud\LeanObject;
 use \LeanCloud\Query;
 
-function gen_metadata_by_name($level_name)
+function gen_metadata_by_name($level_name_args)
 {
 	Client::initialize('p3DseF72y38R0vYItqEBBdJc-MdYXbMMI', 'CUwwobi3vLqfrTmlRWmtfuIj', '4W9Y1SUxPOkJl861XVjItAjd');
 	$query = new Query("Metadata");
-	$query->equalTo("level_name", $level_name);
-	$return_data = $query->first();
-	$return_data = $query->find();
-	return json_decode(str_replace("\u0000", "", json_encode(object_array($return_data[0]))), true)["LeanCloud\LeanObject_data"];
+	$query->equalTo("level_name", $level_name_args);
+	$query->select("-level_name","-objectId","-createdAt","-updatedAt");
+	$metadatas_query = $query->first();
+	//$return_data = $query->find();
+	$return_data['level_name']=$level_name_args;
+	$return_data['level_id']=$metadatas_query->get("level_id");
+	$return_data['level_author']=$metadatas_query->get("level_author");
+	$return_data['level_apariencia']=$metadatas_query->get("level_apariencia");
+	$return_data['level_entorno']="0";
+	$return_data['level_label1']=$metadatas_query->get("level_label1");
+	$return_data['level_label2']=$metadatas_query->get("level_label2");
+	$return_data['level_date']=$metadatas_query->get("level_date");
+	return $return_data;
 };
 
 function object_array($array)
@@ -91,70 +100,77 @@ define('etiquetas_zh', [
 header('Content-Type: text/html; charset=utf-8');
 set_time_limit(0);
 
-$level_name = str_replace('levelName=%22','',str_replace('.swe%22', '', $_SERVER['QUERY_STRING']));
+$level_name = rawurldecode(str_replace('levelName=%22','',str_replace('.swe%22', '', $_SERVER['QUERY_STRING'])));
+
 $metadatas = gen_metadata_by_name($level_name);
 
 
 $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 4);
 if (preg_match("/zh/i", $lang)) {
 	if (is_null($metadatas)) {
-		echo '<font size="5">' . $level_name . '</font>';
-		echo '获取关卡信息失败，本关卡不存在于数据库中。';
-		echo '目前网页端只支持显示私服中关卡的详细信息，请在私服中游玩一次本关后重试。';
+		echo '<p>' . '<font size="5">' . $level_name . '</font>' . '</p>';
+		echo '<p>' . '获取关卡信息失败，本关卡不存在于数据库中。' . '</p>';
+		echo '<p>' . '目前网页端只支持显示私服中关卡的详细信息，请在私服中游玩一次本关后重试。' . '</p>';
 	} else {
-		echo '<font size="5">' . $level_name . '</font>';
-		echo "关卡ID：" . $metadatas['level_id'];
-		echo "作者：" . $metadatas['level_author'];
+		echo '<p>' . '<font size="5">' . $level_name . '</font>' . '</p>';
+		echo '<p>' . "关卡ID：" . $metadatas['level_id'] . '</p>';
+		echo '<p>' . "作者：" . $metadatas['level_author'] . '</p>';
+		echo '<p>' . "日期：" . $metadatas['level_date'] . '</p>';
+		echo '<br/>';
 		if ($metadatas['level_apariencia'] == '0') {
-			echo "游戏风格：" . "超级马力欧兄弟";
+			echo '<p>' . "游戏风格：" . "超级马力欧兄弟" . '</p>';
 		} elseif ($metadatas['level_apariencia'] == '1') {
-			echo "游戏风格：" . "超级马力欧兄弟 3";
+			echo '<p>' . "游戏风格：" . "超级马力欧兄弟 3" . '</p>';
 		} elseif ($metadatas['level_apariencia'] == '2') {
-			echo "游戏风格：" . "超级马力欧世界";
+			echo '<p>' . "游戏风格：" . "超级马力欧世界" . '</p>';
 		} elseif ($metadatas['level_apariencia'] == '1') {
-			echo "游戏风格：" . "New 超级马力欧兄弟 U";
+			echo '<p>' . "游戏风格：" . "New 超级马力欧兄弟 U" . '</p>';
 		};
-		echo "关卡标签：" . etiquetas_zh[$metadatas['level_label1']] . "，" . etiquetas_zh[$metadatas['level_label2']];
+		echo '<p>' . "关卡标签：" . etiquetas_zh[$metadatas['level_label1']] . "，" . etiquetas_zh[$metadatas['level_label2']] . '</p>';
 	};
 } elseif (preg_match("/en/i", $lang)) {
 	if (is_null($metadatas)) {
-		echo '<font size="5">' . $level_name . '</font>';
-		echo 'Failed to get level information: This level does not exist in the database.';
-		echo 'Currently, web version only supports displaying the information of the level loaded in the private server. Please play this level once in the private server, then try again.';
+		echo '<p>' . '<font size="5">' . $level_name . '</font>' . '</p>';
+		echo '<p>' . 'Failed to get level information: This level does not exist in the database.' . '</p>';
+		echo '<p>' . 'Currently, web version only supports displaying the information of the level loaded in the private server. Please play this level once in the private server, then try again.' . '</p>';
 	} else {
-		echo '<font size="5">' . $level_name . '</font>';
-		echo "Level ID: " . $metadatas['level_id'];
-		echo "Maker: " . $metadatas['level_author'];
+		echo '<p>' . '<font size="5">' . $level_name . '</font>' . '</p>';
+		echo '<p>' . "Level ID: " . $metadatas['level_id'] . '</p>';
+		echo '<p>' . "Maker: " . $metadatas['level_author'] . '</p>';
+		echo '<p>' . "Created at " . $metadatas['level_date'] . '</p>';
+		echo '<br/>';
 		if ($metadatas['level_apariencia'] == '0') {
-			echo "Game Style: " . "Super Mario Bros.";
+			echo '<p>' . "Game Style: " . "Super Mario Bros." . '</p>';
 		} elseif ($metadatas['level_apariencia'] == '1') {
-			echo "Game Style: " . "Super Mario Bros. 3";
+			echo '<p>' . "Game Style: " . "Super Mario Bros. 3" . '</p>';
 		} elseif ($metadatas['level_apariencia'] == '2') {
-			echo "Game Style: " . "Super Mario World";
+			echo '<p>' . "Game Style: " . "Super Mario World" . '</p>';
 		} elseif ($metadatas['level_apariencia'] == '1') {
-			echo "Game Style: " . "New Super Mario Bros. U";
+			echo '<p>' . "Game Style: " . "New Super Mario Bros. U" . '</p>';
 		};
-		echo "Level Tags: " . etiquetas_en[$metadatas['level_label1']] . ", " . etiquetas_en[$metadatas['level_label2']];
+		echo '<p>' . "Level Tags: " . etiquetas_en[$metadatas['level_label1']] . ", " . etiquetas_en[$metadatas['level_label2']] . '</p>';
 	};
 } elseif (preg_match("/es/i", $lang)) {
 	if (is_null($metadatas)) {
-		echo '<font size="5">' . $level_name . '</font>';
-		echo 'No se pudo obtener la información del nivel: este nivel no existe en la base de datos.';
-		echo 'Actualmente, la versión web solo admite mostrar la información del nivel cargado en el servidor privado. Juega este nivel una vez en el servidor privado y vuelve a intentarlo.';
+		echo '<p>' . '<font size="5">' . $level_name . '</font>' . '</p>';
+		echo '<p>' . 'No se pudo obtener la información del nivel: este nivel no existe en la base de datos.' . '</p>';
+		echo '<p>' . 'Actualmente, la versión web solo admite mostrar la información del nivel cargado en el servidor privado. Juega este nivel una vez en el servidor privado y vuelve a intentarlo.' . '</p>';
 	} else {
-		echo '<font size="5">' . $level_name . '</font>';
-		echo "ID del Nivel: " . $metadatas['level_id'];
-		echo "Creador: " . $metadatas['level_author'];
+		echo '<p>' . '<font size="5">' . $level_name . '</font>' . '</p>';
+		echo '<p>' . "ID del Nivel: " . $metadatas['level_id'] . '</p>';
+		echo '<p>' . "Creador: " . $metadatas['level_author'] . '</p>';
+		echo '<p>' . "Creado en " . $metadatas['level_date'] . '</p>';
+		echo '<br/>';
 		if ($metadatas['level_apariencia'] == '0') {
-			echo "Estilo de Juego: " . "Super Mario Bros.";
+			echo '<p>' . "Estilo de Juego: " . "Super Mario Bros." . '</p>';
 		} elseif ($metadatas['level_apariencia'] == '1') {
-			echo "Estilo de Juego: " . "Super Mario Bros. 3";
+			echo '<p>' . "Estilo de Juego: " . "Super Mario Bros. 3" . '</p>';
 		} elseif ($metadatas['level_apariencia'] == '2') {
-			echo "Estilo de Juego: " . "Super Mario World";
+			echo '<p>' . "Estilo de Juego: " . "Super Mario World" . '</p>';
 		} elseif ($metadatas['level_apariencia'] == '1') {
-			echo "Estilo de Juego: " . "New Super Mario Bros. U";
+			echo '<p>' . "Estilo de Juego: " . "New Super Mario Bros. U" . '</p>';
 		};
-		echo "Etiquetas de Nivel: " . etiquetas_es[$metadatas['level_label1']] . ", " . etiquetas_es[$metadatas['level_label2']];
+		echo '<p>' . "Etiquetas de Nivel: " . etiquetas_es[$metadatas['level_label1']] . ", " . etiquetas_es[$metadatas['level_label2']] . '</p>';
 	};
 };
 ?>
@@ -164,11 +180,11 @@ if (preg_match("/zh/i", $lang)) {
 <html>
 
 <head>
-	<style type="text/css">
-		body {
-			font-size: 16px;
-		}
-	</style>
+	<?php //<style type="text/css">
+		//body {
+		//	font-size: 16px;
+		//}
+	//</style> ?>
 	<script src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
 </head>
 
