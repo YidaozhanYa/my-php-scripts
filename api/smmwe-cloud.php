@@ -165,7 +165,7 @@ echo <<<STR
 
 	<div id="vcomments"></div>
 	<script>
-		document.getElementById("url").setAttribute("style", "display:none");
+		//document.getElementById("url").setAttribute("style", "display:none");
 		function GetQueryString(name) {
 			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
 			var r = window.location.search.substr(1).match(reg);
