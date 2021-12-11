@@ -59,10 +59,10 @@ echo '<p>';
 echo '<strong>'.$paste['title'].'   </strong>    <font color="#a7a7a7">'.$paste['username'].' '.$paste['date'].'</font>';
 echo '</p>';
 echo '<p id="content'.strval($count).'">';
-echo $paste['content'];
+echo str_replace('\n','<br>',$paste['content']);
 echo '</p>';
 echo '<p>';
-echo '<a target="_blank" href="https://api.yidaozhan.gq/api/paste-raw?id='.$paste['id'].'">RAW</a>';
+echo '<a href="https://api.yidaozhan.gq/api/paste-raw?id='.$paste['id'].'">RAW</a>';
 echo '</p>';
 echo '<hr/>';
 
