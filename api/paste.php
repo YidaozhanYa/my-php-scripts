@@ -62,7 +62,7 @@ echo '<p id="content'.strval($count).'">';
 echo $paste['content'];
 echo '</p>';
 echo '<p>';
-echo '<a href="https://api.yidaozhan.gq/api/paste-raw?id='.$paste['id'].'">RAW</a>';
+echo '<a target="_blank" href="https://api.yidaozhan.gq/api/paste-raw?id='.$paste['id'].'">RAW</a>';
 echo '</p>';
 echo '<hr/>';
 
