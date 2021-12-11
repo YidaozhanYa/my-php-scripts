@@ -58,15 +58,13 @@ $count+=1;
 echo '<p>';
 echo '<strong>'.$paste['title'].'   </strong>    <font color="#a7a7a7">'.$paste['username'].' '.$paste['date'].'</font>';
 echo '</p>';
-echo '<p id="content'.strval($count).'">';
-echo str_replace('\n','<br>',$paste['content']);
-echo '</p>';
+echo '<p id="content'.strval($count).'">'.$paste['content'].'</p>';
 echo '<p>';
 echo '<a href="https://api.yidaozhan.gq/api/paste-raw?id='.$paste['id'].'">RAW</a>';
 echo '</p>';
 echo '<hr/>';
 
-$script=$script ."document.getElementById('content".strval($count)."').innerHTML = marked(document.getElementById('content".strval($count)."').innerHTML);";
+$script=$script ."var tmp=marked(document.getElementById('content".strval($count)."').innerHTML).replace(new RegExp('\\n','gm'),'<br>');"."document.getElementById('content".strval($count)."').innerHTML = tmp.substr(0,tmp.length-4);";
 };
 
 $script=$script .'</script>';
