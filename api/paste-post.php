@@ -28,7 +28,7 @@ if (file_get_contents("php://input")!==""){
     if ($query->first()->get('username')==$requests['username']){
         $paste=new LeanObject("Paste");
         $paste->set('content',rawurldecode(file_get_contents("php://input")));
-        $paste->set('username',$requests['username']);
+        $paste->set('username',rawurldecode($requests['username']));
         $paste->set('date',date('Y-m-d'));
         $paste->set('title',rawurldecode($requests['title']));
         $paste->save();
