@@ -98,7 +98,7 @@ if (preg_match("/zh/i", $lang)) {
 			echo '<p>' . "游戏风格：" . "超级马力欧兄弟 3" . '</p>';
 		} elseif ($metadatas['level_apariencia'] == '2') {
 			echo '<p>' . "游戏风格：" . "超级马力欧世界" . '</p>';
-		} elseif ($metadatas['level_apariencia'] == '1') {
+		} elseif ($metadatas['level_apariencia'] == '3') {
 			echo '<p>' . "游戏风格：" . "New 超级马力欧兄弟 U" . '</p>';
 		};
 		if ($metadatas['level_label2']=="---") {
