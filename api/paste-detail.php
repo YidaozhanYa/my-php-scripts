@@ -23,27 +23,14 @@ if (is_null($_SERVER['QUERY_STRING'])==false){
 };
 
 Client::initialize(LEANCLOUD_APP_ID,LEANCLOUD_APP_KEY,LEANCLOUD_MASTER_KEY);
-
 $query = new Query("Paste");
-$query->skip((intval($requests['page'])-1)*10);
-$query->limit(10);
-$query->descend("createdAt");
-$query->select("username", "content","date","title","objectId");
-$objpastes = $query->find();
-$count=0;
-$strmax=80;
-foreach ($objpastes as $paste) {
-    $count+=1;
-    $pastes[$count]['username']=$paste->get('username');
-    $pastes[$count]['content']=$paste->get('content');
-    if (strlen($pastes[$count]['content'])>$strmax){
-        $pastes[$count]['content']=substr($pastes[$count]['content'],0,$strmax)." ...".PHP_EOL."请点击展开查看更多。";
-    };
-    $pastes[$count]['date']=$paste->get('date');
-    $pastes[$count]['title']=$paste->get('title');
-    $pastes[$count]['id']=strval($paste->get('objectId'));
-};
+$pasteo = $query->get($requests['id']);
 
+$paste['username']=$pasteo->get('username');
+$paste['content']=$pasteo->get('content');
+$paste['date']=$pasteo->get('date');
+$paste['title']=$pasteo->get('title');
+$paste['id']=strval($pasteo->get('objectId'));
 echo "<!doctype html>";
 echo <<<EOF
 <style>
@@ -54,29 +41,18 @@ a {
 </style>
 EOF;
 echo '<body>';
-$script='<script type="text/javascript">';
-$count=0;
-
-foreach ($pastes as $paste){
-$count+=1;
 echo '<p>';
 echo '<strong>'.$paste['title'].'   </strong>    <font color="#a7a7a7">'.$paste['username'].' '.$paste['date'].'</font>';
 echo '</p>';
-echo '<p id="content'.strval($count).'">'.$paste['content'].'</p>';
+echo '<p id="content1">'.$paste['content'].'</p>';
 echo '<p>';
-echo '<a href="https://api.yidaozhan.gq/api/paste-detail?id='.$paste['id'].'">展开</a>&nbsp;';
+echo '<a href="https://api.yidaozhan.gq/api/paste?page=1">返回&nbsp;</a>';
 echo '<a href="https://api.yidaozhan.gq/api/paste-raw?id='.$paste['id'].'">RAW&nbsp;</a>';
 if(substr($paste['content'],0,4) == 'http'){ 
     echo '<a href="https://api.yidaozhan.gq/api/paste-redir?id='.$paste['id'].'">重定向</a>';
 };
 echo '</p>';
 echo '<hr/>';
-
-$script=$script ."var tmp=marked(document.getElementById('content".strval($count)."').innerHTML).replace(new RegExp('\\n','gm'),'<br>');"."document.getElementById('content".strval($count)."').innerHTML = tmp.substr(0,tmp.length-4);";
-};
-
-$script=$script .'</script>';
 echo '<script src="https://cdn.bootcss.com/marked/0.8.1/marked.min.js"></script>';
-echo $script;
+echo '<script type="text/javascript">'."var tmp=marked(document.getElementById('content1').innerHTML).replace(new RegExp('\\n','gm'),'<br>');"."document.getElementById('content1').innerHTML = tmp;</script>";
 echo '</body>';
- ?>

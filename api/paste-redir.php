@@ -3,7 +3,7 @@ ini_set("display_errors", 0);
 error_reporting(0);
 error_reporting(E_ALL ^ E_NOTICE);
 error_reporting(E_ALL ^ E_WARNING); 
-header("Content-type: text/plain; charset=utf-8");
+header("Content-type: text/html; charset=utf-8");
 
 require_once("autoload-linux.php");
 
@@ -25,4 +25,5 @@ if (is_null($_SERVER['QUERY_STRING'])==false){
 Client::initialize(LEANCLOUD_APP_ID,LEANCLOUD_APP_KEY,LEANCLOUD_MASTER_KEY);
 $query = new Query("Paste");
 $paste = $query->get($requests['id']);
-echo $paste->get('content');
+echo '<meta http-equiv="Refresh" content="1; url='.$paste->get('content').'">';
+echo '<p>正在重定向到'.$paste->get('content').'</p>';
