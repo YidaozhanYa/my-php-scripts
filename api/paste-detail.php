@@ -46,10 +46,10 @@ echo '<strong>'.$paste['title'].'   </strong>    <font color="#a7a7a7">'.$paste[
 echo '</p>';
 echo '<p id="content1">'.$paste['content'].'</p>';
 echo '<p>';
-echo '<a href="https://api.yidaozhan.gq/api/paste?page=1">返回&nbsp;</a>';
-echo '<a href="https://api.yidaozhan.gq/api/paste-raw?id='.$paste['id'].'">RAW&nbsp;</a>';
+echo '<a href="https://api.yidaozhan.ga/api/paste?page=1">返回&nbsp;</a>';
+echo '<a href="https://api.yidaozhan.ga/api/paste-raw?id='.$paste['id'].'">RAW&nbsp;</a>';
 if(substr($paste['content'],0,4) == 'http'){ 
-    echo '<a href="https://api.yidaozhan.gq/api/paste-redir?id='.$paste['id'].'">重定向</a>';
+    echo '<a href="https://api.yidaozhan.ga/api/paste-redir?id='.$paste['id'].'">重定向</a>';
 };
 echo '</p>';
 echo '<hr/>';
